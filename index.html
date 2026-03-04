@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Special Offer — Pamer Chiropractic Health Center</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --primary: #2A7F62;
+      --primary-dark: #1E5E48;
+      --primary-light: #E8F5EF;
+      --accent: #4EADC5;
+      --text: #1A2B3C;
+      --text-light: #5A6B7C;
+      --bg: #F7FAFA;
+      --white: #FFFFFF;
+      --border: #D1DDE6;
+      --error: #C0392B;
+      --radius: 12px;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ---------- Loading State ---------- */
+    .loading-screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 60vh;
+      gap: 16px;
+    }
+    .spinner {
+      width: 40px; height: 40px;
+      border: 4px solid var(--border);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-screen p { color: var(--text-light); font-size: 14px; }
+
+    /* ---------- Layout ---------- */
+    .page { display: none; flex-direction: column; min-height: 100vh; }
+    .page.visible { display: flex; }
+
+    /* ---------- Top Bar ---------- */
+    .top-bar {
+      background: var(--white);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .top-bar img {
+      width: 48px;
+      height: 48px;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+    .top-bar .biz-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .top-bar .biz-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.2;
+    }
+    .top-bar .biz-phone {
+      font-size: 13px;
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .top-bar .biz-phone:hover { text-decoration: underline; }
+
+    .hero {
+      background: linear-gradient(160deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: var(--white);
+      padding: 48px 24px 40px;
+      text-align: center;
+    }
+    .hero h1 {
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1.25;
+      margin-bottom: 12px;
+    }
+    .hero p {
+      font-size: 16px;
+      opacity: .9;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .offer-card {
+      background: var(--white);
+      margin: -20px 16px 0;
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      box-shadow: 0 4px 24px rgba(0,0,0,.08);
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+    .offer-badge {
+      display: inline-block;
+      background: var(--primary-light);
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 13px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      margin-bottom: 16px;
+      letter-spacing: .3px;
+      text-transform: uppercase;
+    }
+    .offer-card h2 {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+    .offer-card .detail {
+      font-size: 14px;
+      color: var(--text-light);
+    }
+    .offer-card .expiry {
+      display: inline-block;
+      margin-top: 14px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--error);
+      background: #FDF0EF;
+      padding: 6px 14px;
+      border-radius: 20px;
+    }
+
+    /* ---------- Form ---------- */
+    .form-section {
+      padding: 32px 16px;
+      max-width: 480px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .form-section h3 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      text-align: center;
+    }
+    .form-section .subtitle {
+      text-align: center;
+      color: var(--text-light);
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+
+    .field { margin-bottom: 16px; }
+    .field label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+    .field label .optional {
+      font-weight: 400;
+      color: var(--text-light);
+    }
+    .field input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 16px; /* prevents iOS zoom */
+      font-family: inherit;
+      color: var(--text);
+      background: var(--white);
+      transition: border-color .2s;
+    }
+    .field input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(42,127,98,.12);
+    }
+    .field input.invalid { border-color: var(--error); }
+    .field .error-msg {
+      color: var(--error);
+      font-size: 12px;
+      margin-top: 4px;
+      display: none;
+    }
+
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background .2s, transform .1s;
+    }
+    .btn:active { transform: scale(.98); }
+    .btn-primary {
+      background: var(--primary);
+      color: var(--white);
+    }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-primary:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+    }
+    .btn-accent {
+      background: var(--accent);
+      color: var(--white);
+      text-decoration: none;
+      text-align: center;
+    }
+    .btn-accent:hover { background: #3D97AD; }
+
+    .form-error {
+      background: #FDF0EF;
+      color: var(--error);
+      font-size: 14px;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    /* ---------- Thank You ---------- */
+    .thank-you {
+      display: none;
+      text-align: center;
+      padding: 48px 24px;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+    .thank-you .check {
+      width: 64px; height: 64px;
+      background: var(--primary-light);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+    }
+    .thank-you .check svg { width: 32px; height: 32px; color: var(--primary); }
+    .thank-you h3 { font-size: 22px; margin-bottom: 8px; }
+    .thank-you p { color: var(--text-light); font-size: 15px; margin-bottom: 28px; }
+
+    /* ---------- Footer ---------- */
+    .footer {
+      margin-top: auto;
+      text-align: center;
+      padding: 28px 16px 24px;
+      font-size: 12px;
+      color: var(--text-light);
+      border-top: 1px solid var(--border);
+    }
+    .footer .footer-name {
+      font-weight: 600;
+      color: var(--text);
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
+    .footer .footer-address {
+      margin-bottom: 6px;
+    }
+    .footer .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 8px;
+    }
+    .footer .footer-links a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 13px;
+    }
+    .footer .footer-links a:hover { text-decoration: underline; }
+
+    /* ---------- Tablet+ ---------- */
+    @media (min-width: 600px) {
+      .hero { padding: 64px 32px 56px; }
+      .hero h1 { font-size: 36px; }
+      .offer-card { margin: -24px auto 0; max-width: 520px; padding: 36px 32px; }
+      .form-section { padding: 40px 32px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============ LOADING STATE ============ -->
+  <div id="loading" class="loading-screen">
+    <div class="spinner"></div>
+    <p>Loading your special offer&hellip;</p>
+  </div>
+
+  <!-- ============ MAIN PAGE ============ -->
+  <div id="page" class="page">
+
+    <!-- Top Bar with Logo & Contact -->
+    <div class="top-bar">
+      <img src="https://cdn.reviewwave.com/files/6915/tUuRjd33eJgeizVMowphd4IlQ47ogIkS.jpg" alt="Pamer Chiropractic Health Center logo">
+      <div class="biz-info">
+        <div class="biz-name">Pamer Chiropractic Health Center</div>
+        <a class="biz-phone" href="tel:3307249331">330-724-9331</a>
+      </div>
+    </div>
+
+    <!-- Hero -->
+    <header class="hero">
+      <h1 id="headline"></h1>
+      <p id="subheadline"></p>
+    </header>
+
+    <!-- Offer Card -->
+    <div class="offer-card">
+      <span class="offer-badge">Limited-Time Offer</span>
+      <h2 id="offer-description"></h2>
+      <p class="detail" id="offer-detail"></p>
+      <span class="expiry" id="expiry-text"></span>
+    </div>
+
+    <!-- Claim Form -->
+    <section class="form-section" id="form-section">
+      <h3>Claim Your Offer</h3>
+      <p class="subtitle">Fill out the form below and we'll save your spot.</p>
+
+      <div class="form-error" id="form-error"></div>
+
+      <form id="claim-form" novalidate>
+        <div class="field">
+          <label for="firstName">First Name</label>
+          <input type="text" id="firstName" name="firstName" autocomplete="given-name" required>
+          <div class="error-msg" id="firstName-error">Please enter your first name.</div>
+        </div>
+        <div class="field">
+          <label for="lastName">Last Name</label>
+          <input type="text" id="lastName" name="lastName" autocomplete="family-name" required>
+          <div class="error-msg" id="lastName-error">Please enter your last name.</div>
+        </div>
+        <div class="field">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" name="phone" autocomplete="tel" required>
+          <div class="error-msg" id="phone-error">Please enter a valid phone number.</div>
+        </div>
+        <div class="field">
+          <label for="email">Email <span class="optional">(optional)</span></label>
+          <input type="email" id="email" name="email" autocomplete="email">
+          <div class="error-msg" id="email-error">Please enter a valid email address.</div>
+        </div>
+        <button type="submit" class="btn btn-primary" id="submit-btn">Claim This Offer</button>
+      </form>
+    </section>
+
+    <!-- Thank You (shown after successful submit) -->
+    <div class="thank-you" id="thank-you">
+      <div class="check">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+        </svg>
+      </div>
+      <h3>You're All Set!</h3>
+      <p>Your offer has been claimed. Book your appointment now to get started.</p>
+      <a id="book-btn" class="btn btn-accent" href="#" target="_blank" rel="noopener">Book Your Appointment</a>
+    </div>
+
+    <footer class="footer">
+      <div class="footer-name">Pamer Chiropractic Health Center</div>
+      <div class="footer-address">3485 Fortuna Dr, Suite 300, Akron, OH 44312</div>
+      <div class="footer-links">
+        <a href="tel:3307249331">Call Us</a>
+        <a href="https://www.pamerchiro.com/" target="_blank" rel="noopener">Website</a>
+        <a href="https://www.pamerchiro.com/scheduler#691516cbfdf587874852b8ac013bcc05c95c" target="_blank" rel="noopener">Book Online</a>
+      </div>
+      &copy; 2026 Pamer Chiropractic Health Center. All rights reserved.
+    </footer>
+  </div>
+
+<script>
+// =====================================================================
+//  CONFIGURATION — Update these two URLs before going live
+// =====================================================================
+
+// 1. GOOGLE SHEET PUBLISHED JSON URL
+//    This is the URL for the "Page Settings" tab of your published Google Sheet.
+//    To get this URL:
+//      - Open your Google Sheet
+//      - Go to File → Share → Publish to web
+//      - Choose the "Page Settings" tab, and select "CSV" format
+//      - Copy the URL and paste it below
+//    The placeholder below is an example — replace it with your real URL.
+const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR9d2OC88pUjplCUXgEemj6S8JkBnH2wlb-WKa5qGGkY8tCInCEvoKXPYzDR--LcOVSkjoRYcF510BC/pub?gid=541109023&single=true&output=csv';
+
+// 2. GOOGLE APPS SCRIPT WEB APP URL
+//    This is the URL you get after deploying Code.gs as a web app.
+//    See SETUP.md for instructions.
+const FORM_SUBMIT_URL = 'https://script.google.com/macros/s/AKfycbxf-Tk58yrwvgKOcJybkHSMNjyj2pKyZPaghuH2MVWsl-IJAIO1hUIJ3l6YB-IxRUCi/exec';
+
+// =====================================================================
+//  DEFAULT / FALLBACK CONTENT
+//  If the Google Sheet can't be loaded, these values are shown instead.
+//  You can edit them here as a safety net.
+// =====================================================================
+const DEFAULTS = {
+  headline:          'Your Path to Pain-Free Living Starts Here',
+  subheadline:       'Take advantage of our exclusive new patient offer and experience the difference chiropractic care can make.',
+  offer_description: 'Free Initial Consultation + Exam',
+  offer_detail:      'A $250 value — yours free. No obligation, no pressure. Just great care.',
+  cta_button_label:  'Claim This Offer',
+  booking_url:       'https://www.pamerchiro.com/scheduler#691516cbfdf587874852b8ac013bcc05c95c'
+};
+
+// =====================================================================
+//  PAGE LOGIC — No edits needed below this line
+// =====================================================================
+
+let pageData = { ...DEFAULTS };
+
+// --- Fetch content from Google Sheet ---
+async function loadPageSettings() {
+  try {
+    const resp = await fetch(SHEET_URL);
+    if (!resp.ok) throw new Error('Sheet fetch failed');
+    const csv = await resp.text();
+    const parsed = parseCSV(csv);
+    // Expect two-column layout: Column A = field name, Column B = value
+    for (const row of parsed) {
+      const key = (row[0] || '').trim().toLowerCase().replace(/\s+/g, '_');
+      const val = (row[1] || '').trim();
+      if (key && val && DEFAULTS.hasOwnProperty(key)) {
+        pageData[key] = val;
+      }
+    }
+  } catch (e) {
+    console.warn('Could not load sheet settings, using defaults:', e);
+  }
+  renderPage();
+}
+
+// Minimal CSV parser (handles quoted fields)
+function parseCSV(text) {
+  const rows = [];
+  let current = [];
+  let field = '';
+  let inQuotes = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (inQuotes) {
+      if (c === '"' && text[i + 1] === '"') { field += '"'; i++; }
+      else if (c === '"') { inQuotes = false; }
+      else { field += c; }
+    } else {
+      if (c === '"') { inQuotes = true; }
+      else if (c === ',') { current.push(field); field = ''; }
+      else if (c === '\n' || (c === '\r' && text[i + 1] === '\n')) {
+        current.push(field); field = '';
+        rows.push(current); current = [];
+        if (c === '\r') i++;
+      } else { field += c; }
+    }
+  }
+  if (field || current.length) { current.push(field); rows.push(current); }
+  return rows;
+}
+
+// --- Render content into the DOM ---
+function renderPage() {
+  document.getElementById('headline').textContent        = pageData.headline;
+  document.getElementById('subheadline').textContent     = pageData.subheadline;
+  document.getElementById('offer-description').textContent = pageData.offer_description;
+  document.getElementById('offer-detail').textContent    = pageData.offer_detail;
+  document.getElementById('submit-btn').textContent      = pageData.cta_button_label;
+  document.getElementById('book-btn').href               = pageData.booking_url;
+
+  // Show expiry date (1 week from today)
+  const expiry = new Date();
+  expiry.setDate(expiry.getDate() + 7);
+  const options = { month: 'long', day: 'numeric', year: 'numeric' };
+  document.getElementById('expiry-text').textContent = 'Offer expires ' + expiry.toLocaleDateString('en-US', options);
+
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('page').classList.add('visible');
+}
+
+// --- Form validation & submission ---
+const form = document.getElementById('claim-form');
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  clearErrors();
+
+  const firstName = val('firstName');
+  const lastName  = val('lastName');
+  const phone     = val('phone');
+  const email     = val('email');
+
+  let valid = true;
+  if (!firstName) valid = showError('firstName');
+  if (!lastName)  valid = showError('lastName');
+  if (!phone || !/^[\d\s().+-]{7,20}$/.test(phone)) valid = showError('phone');
+  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) valid = showError('email');
+  if (!valid) return;
+
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  btn.textContent = 'Submitting…';
+
+  try {
+    const resp = await fetch(FORM_SUBMIT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ firstName, lastName, phone, email }),
+      mode: 'no-cors' // Apps Script CORS workaround; response will be opaque
+    });
+    // With no-cors the response is opaque (status 0), so we assume success
+    showThankYou();
+  } catch (err) {
+    document.getElementById('form-error').textContent = 'Something went wrong. Please try again.';
+    document.getElementById('form-error').style.display = 'block';
+    btn.disabled = false;
+    btn.textContent = pageData.cta_button_label;
+  }
+});
+
+function val(id) { return document.getElementById(id).value.trim(); }
+
+function showError(id) {
+  document.getElementById(id).classList.add('invalid');
+  document.getElementById(id + '-error').style.display = 'block';
+  return false;
+}
+
+function clearErrors() {
+  document.querySelectorAll('.invalid').forEach(el => el.classList.remove('invalid'));
+  document.querySelectorAll('.error-msg').forEach(el => el.style.display = 'none');
+  document.getElementById('form-error').style.display = 'none';
+}
+
+function showThankYou() {
+  document.getElementById('form-section').style.display = 'none';
+  document.getElementById('thank-you').style.display    = 'block';
+}
+
+// --- Boot ---
+loadPageSettings();
+</script>
+
+<!--
+=====================================================================
+  HOW TO UPDATE THIS PAGE'S CONTENT (for Andy)
+=====================================================================
+
+You do NOT need to edit this file to change what the page says!
+All the text on the page comes from your Google Sheet.
+
+Open your Google Sheet and go to the tab called "Page Settings".
+You'll see two columns:
+
+  Column A (Field Name)     Column B (Your Content)
+  ─────────────────────     ──────────────────────────────────────────
+  headline                  The big bold title at the top of the page
+  subheadline               The smaller text right below the title
+  offer_description         The main offer line (e.g. "Free Consultation")
+  offer_detail              Extra detail about the offer (e.g. "A $250 value")
+  cta_button_label          What the claim button says (e.g. "Claim This Offer")
+  booking_url               The full link to your online booking page
+
+To update the page:
+  1. Open the Google Sheet
+  2. Go to the "Page Settings" tab
+  3. Change the text in Column B for whichever field you want to update
+  4. That's it! The page will show your new text the next time someone loads it.
+
+DO NOT change anything in Column A — those are the field names the page looks for.
+DO NOT rename or delete the "Page Settings" tab.
+=====================================================================
+-->
+
+</body>
+</html>
