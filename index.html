@@ -139,6 +139,14 @@
       font-size: 14px;
       color: var(--text-light);
     }
+    .offer-card .disclaimer {
+      margin-top: 16px;
+      font-size: 11px;
+      color: var(--text-light);
+      line-height: 1.5;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+    }
     .offer-card .expiry {
       display: inline-block;
       margin-top: 14px;
@@ -340,6 +348,7 @@
       <h2 id="offer-description"></h2>
       <p class="detail" id="offer-detail"></p>
       <span class="expiry" id="expiry-text"></span>
+      <p class="disclaimer">*Medicare/Medicaid beneficiaries: This complimentary offer applies to the consultation only. Federal law prohibits offering free examinations or services to Medicare/Medicaid recipients. Please call our office for details.</p>
     </div>
 
     <!-- Claim Form -->
@@ -426,8 +435,8 @@ const FORM_SUBMIT_URL = 'https://script.google.com/macros/s/AKfycbxf-Tk58yrwvgKO
 const DEFAULTS = {
   headline:          'Your Path to Pain-Free Living Starts Here',
   subheadline:       'Take advantage of our exclusive new patient offer and experience the difference chiropractic care can make.',
-  offer_description: 'Free Initial Consultation + Exam',
-  offer_detail:      'A $250 value — yours free. No obligation, no pressure. Just great care.',
+  offer_description: 'Complimentary Initial Consultation + Exam',
+  offer_detail:      'A $250 value — yours at no cost. No obligation, no pressure. Just great care.',
   cta_button_label:  'Claim This Offer',
   booking_url:       'https://www.pamerchiro.com/scheduler#691516cbfdf587874852b8ac013bcc05c95c'
 };
